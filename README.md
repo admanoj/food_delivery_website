@@ -73,4 +73,4 @@ If you have any questions or feedback, please reach out to us at [admanoj111@gma
 
 ---
 
-Made with ❤️ and 🍕 by [Manoj Adhikari]
+Made with ❤️ and 🍕 by Manoj Adhikari
