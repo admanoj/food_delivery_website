@@ -28,6 +28,11 @@ const userSchema = new Schema({
   userName: String,
   password: String,
   confirmPassword: String,
+  role: {
+    type: String,
+    enum: ["student", "teacher", "admin"],
+    default: "student",
+  },
 });
 const User = mongoose.model("User", userSchema);
 app.use(express.json());
@@ -47,6 +52,10 @@ app.post("/register", async (req, res) => {
   // no exists:
   //2. password hash
   req.body.password = await bcrypt.hash(req.body.password, saltRounds);
+  req.body.confirmPassword = await bcrypt.hash(
+    req.body.confirmPassword,
+    saltRounds
+  );
   //3. save to db
   User.create(req.body);
   res.send({ msg: req.body.role + " created successfully" });

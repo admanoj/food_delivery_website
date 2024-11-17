@@ -18,6 +18,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -29,6 +36,7 @@ export default function RegisterForm() {
       username: "",
       password: "",
       confirmPassword: "",
+      role: "", // New field
     },
     validationSchema: Yup.object({
       fullName: Yup.string().required("Full name is required"),
@@ -42,28 +50,26 @@ export default function RegisterForm() {
       confirmPassword: Yup.string()
         .oneOf([Yup.ref("password")], "Passwords must match")
         .required("Confirm password is required"),
+      role: Yup.string().required("Role is required"), // Validation for role
     }),
-    onSubmit:
-      // Handle form submission
-      async (values) => {
-        try {
-          const { data } = await axios.post(
-            "http://localhost:8000/register",
-            values
-          );
-          if (data) {
-            toast({
-              title: data.msg,
-            });
-          }
-        } catch (error) {
-          debugger;
+    onSubmit: async (values) => {
+      try {
+        const { data } = await axios.post(
+          "http://localhost:8000/register",
+          values
+        );
+        if (data) {
           toast({
-            variant: "destructive",
-            title: error?.response?.data?.msg,
+            title: data.msg,
           });
         }
-      },
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: error?.response?.data?.msg,
+        });
+      }
+    },
   });
 
   return (
@@ -142,6 +148,25 @@ export default function RegisterForm() {
                 <p className="text-sm text-destructive">
                   {formik.errors.username}
                 </p>
+              ) : null}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="role">Role</Label>
+              <Select
+                onValueChange={(value) => formik.setFieldValue("role", value)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="customer">Customer</SelectItem>
+                  <SelectItem value="rider">Rider</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                </SelectContent>
+              </Select>
+              {formik.touched.role && formik.errors.role ? (
+                <p className="text-sm text-destructive">{formik.errors.role}</p>
               ) : null}
             </div>
 
