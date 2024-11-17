@@ -17,6 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 
 const validationSchema = Yup.object({
   username: Yup.string().required("Username is required"),
@@ -24,6 +25,7 @@ const validationSchema = Yup.object({
 });
 
 export default function LoginForm() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   const formik = useFormik({
@@ -32,9 +34,24 @@ export default function LoginForm() {
       password: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      console.log("Login attempted with:", values);
-      // Handle login logic here
+    onSubmit: async (values) => {
+      try {
+        const { data } = await axios.post(
+          "http://localhost:8000/login",
+          values
+        );
+        if (data) {
+          toast({
+            title: data.msg,
+          });
+        }
+      } catch (error) {
+        debugger;
+        toast({
+          variant: "destructive",
+          title: error?.response?.data?.msg,
+        });
+      }
     },
   });
 

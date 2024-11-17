@@ -21,7 +21,7 @@ import {
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
-
+  const { toast } = useToast();
   const formik = useFormik({
     initialValues: {
       fullName: "",
@@ -43,7 +43,7 @@ export default function RegisterForm() {
         .oneOf([Yup.ref("password")], "Passwords must match")
         .required("Confirm password is required"),
     }),
-    onSubmit: (values) => {
+    onSubmit:
       // Handle form submission
       async (values) => {
         try {
@@ -63,9 +63,7 @@ export default function RegisterForm() {
             title: error?.response?.data?.msg,
           });
         }
-      };
-      console.log(values);
-    },
+      },
   });
 
   return (
