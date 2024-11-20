@@ -36,7 +36,7 @@ export default function RegisterForm() {
       username: "",
       password: "",
       confirmPassword: "",
-      role: "", // New field
+      role: "",
     },
     validationSchema: Yup.object({
       fullName: Yup.string().required("Full name is required"),
@@ -50,7 +50,7 @@ export default function RegisterForm() {
       confirmPassword: Yup.string()
         .oneOf([Yup.ref("password")], "Passwords must match")
         .required("Confirm password is required"),
-      role: Yup.string().required("Role is required"), // Validation for role
+      role: Yup.string().required("Role is required"),
     }),
     onSubmit: async (values) => {
       try {
